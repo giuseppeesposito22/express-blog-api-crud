@@ -1,0 +1,61 @@
+// importazione della lista dei post
+let { posts } = require("../data/db");
+
+const index = (req, res) => {
+  const postTagFilter = req.query.tags;
+
+  let postsFiltered = posts;
+
+  if (postTagFilter) {
+    postsFiltered = posts.filter((post) => post.tags.includes(postTagFilter));
+  }
+
+  res.json({
+    description: "Lista dei post",
+    data: postsFiltered,
+  });
+};
+
+const show = (req, res) => {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+
+  if (!post) {
+    res.status(404).json("Post not found");
+
+    return;
+  }
+
+  res.json({
+    description: `Post con id ${id}`,
+    data: post,
+  });
+};
+
+const store = (req, res) => {
+  res.send("Creazione di un nuovo elemento");
+};
+
+const update = (req, res) => {
+  const id = parseInt(req.params.id);
+  res.send(`Modifica dell' elemento con id: ${id}`);
+};
+
+const destroy = (req, res) => {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+
+  if (!post) {
+    res.status(404).json("Post not found");
+
+    return;
+  }
+
+  posts.splice(post, 1);
+
+  console.log(posts);
+
+  res.status(204).json("No content");
+};
+
+module.exports = { index, show, store, update, destroy };
