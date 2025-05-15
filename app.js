@@ -8,6 +8,9 @@ const app = express();
 
 app.use(express.static("public"));
 
+// Importazione del body-parser
+app.use(express.json());
+
 // Utilizzo delle routers con architetttura REST
 app.use("/posts", postRouters);
 
