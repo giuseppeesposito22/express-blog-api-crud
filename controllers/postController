@@ -35,6 +35,7 @@ const show = (req, res) => {
 const store = (req, res) => {
   const { title, content, image, tags } = req.body;
 
+  // Verifico se i dati sono corretti
   if (!title || !content || !image || !tags) {
     res.status(400).json({
       error: "Bad request",
@@ -73,7 +74,7 @@ const update = (req, res) => {
     return;
   }
 
-  // Verifico se i dati siano corretti
+  // Verifico se i dati sono corretti
   if (!title || !content || !image || !tags) {
     res.status(400).json({
       error: "Bad request",
