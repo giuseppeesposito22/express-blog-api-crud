@@ -35,6 +35,14 @@ const show = (req, res) => {
 const store = (req, res) => {
   const { title, content, image, tags } = req.body;
 
+  if (!title || !content || !image || !tags) {
+    res.status(400).json({
+      error: "Bad request",
+    });
+
+    return;
+  }
+
   // Incremento l' id del nuovo post creato
   let maxId = 0;
   for (const post of posts) {
@@ -50,8 +58,42 @@ const store = (req, res) => {
 };
 
 const update = (req, res) => {
+  const { title, content, image, tags } = req.body;
+
   const id = parseInt(req.params.id);
-  res.send(`Modifica dell' elemento con id: ${id}`);
+
+  // Verifico se il post esiste
+  const originalPost = posts.find((post) => post.id === id);
+
+  if (!originalPost) {
+    res.status(404).json({
+      error: "Post not found",
+    });
+
+    return;
+  }
+
+  // Verifico se i dati siano corretti
+  if (!title || !content || !image || !tags) {
+    res.status(400).json({
+      error: "Bad request",
+    });
+
+    return;
+  }
+
+  // Creo un uovo oggetto con i nuovi parametri
+  const updatedPost = { id, title, content, image, tags };
+
+  // Trovo l' indice del post originale per poi andarlo a sostituire
+  const originalPostIndex = posts.indexOf(originalPost);
+
+  // Sostituisco il nuovo post con il vecchio
+  posts.splice(originalPostIndex, 1, updatedPost);
+
+  res.json({
+    updatedPost,
+  });
 };
 
 const destroy = (req, res) => {
